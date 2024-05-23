@@ -2,22 +2,13 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { getUser } from '../../../../Repo/staffLogic';
-import { getKey } from '../../../../Repo/staffLogic';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     const users = await getUser();
     return NextResponse.json(users);
   } catch (error) {
-    return NextResponse.error();
-  }
-}
-
-export async function getKeyRoute() {
-  try {
-    const keys = await getKey();
-    return NextResponse.json(keys);
-  } catch (error) {
+    console.error('Error fetching users:', error);
     return NextResponse.error();
   }
 }
