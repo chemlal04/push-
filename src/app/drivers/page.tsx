@@ -1,11 +1,110 @@
+// app/drivers/page.tsx
 
 "use client";
 
-export default function drivers(){
-  return(
-  <div>
-    ok
-  </div>
-)
+import React, { useState, useEffect } from "react";
+import DriverDetails from "../../components/Drivers/DriverDetails";
+import DriverTable from "../../components/Drivers/DriverTable";
+import PageTitle from "../../components/PageTitle";
+
+interface User {
+  id_User: string;
+  full_name: string;
+  image?: string[];
+  role: string;
+  status?: string;
+  default_Adress_lat?: number;
+  default_Adress_lng?: number;
+  default_time?: string;
+
 }
 
+const DriversPage: React.FC = () => {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch("/api/User/getDrivers");
+        if (!response.ok) {
+          throw new Error("Failed to fetch drivers");
+        }
+        const data = await response.json();
+        setUsers(data);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "An unknown error occurred"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  const handleDetailsClick = (user: User) => {
+    setSelectedUser(user);
+  };
+
+  const handleClose = () => {
+    setSelectedUser(null);
+  };
+
+  const handleStatusChange = async (id: string, newStatus: string) => {
+    try {
+      const response = await fetch(`/api/User/updateDriverStatus`, { // Update endpoint
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id, status: newStatus }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update status");
+      }
+      const updatedUser = await response.json();
+      setUsers((users) =>
+        users.map((user) => (user.id_User === id ? updatedUser : user))
+      );
+      if (selectedUser && selectedUser.id_User === id) {
+        setSelectedUser(updatedUser);
+      }
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "An unknown error occurred"
+      );
+    }
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  return (
+    <div className="container mx-auto py-4">
+      <PageTitle title="Drivers" />
+      <br />
+      <DriverTable drivers={users} onDetailsClick={handleDetailsClick} />
+      {selectedUser && (
+        <DriverDetails
+          driver={selectedUser}
+          onClose={handleClose}
+          isOpen={true}
+          onStatusChange={(newStatus) =>
+            handleStatusChange(selectedUser.id_User, newStatus)
+          }
+        />
+      )}
+    </div>
+  );
+};
+
+export default DriversPage;

@@ -1,16 +1,16 @@
-// staffLogic.js
+// app/Repo/staffLogic.js
 
-import { getUserFromDb } from '../app/server/db';
-import { getKeyFromDb } from '../app/server/db';
+import { getStudentFromDb, getDriversFromDb, updateDriverStatus } from '../app/server/db';
 
-export async function getUser() {
-  const res = await getUserFromDb();
+export async function getStudents() {
+  const res = await getStudentFromDb();
   return res;
 }
 
-export async function getKey() {
-  const res = await getKeyFromDb();
-  return res;
+export async function getDrivers() {
+  return await getDriversFromDb();
 }
-export { getUserFromDb, getKeyFromDb };
 
+export async function toggleDriverStatus(id, status) {
+  return await updateDriverStatus(id, status);
+}

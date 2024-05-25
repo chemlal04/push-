@@ -1,17 +1,18 @@
-"use client";
+"use client"
 
 import React, { useState } from 'react';
 import { Nav } from './ui/nav';
 import { useWindowWidth } from '@react-hook/window-size';
-import { LayoutDashboard, UsersRound, Settings } from 'lucide-react';
+import { LayoutDashboard, UsersRound, Settings, MessageSquareWarning, Users2Icon } from 'lucide-react';
 import { Button } from './ui/button';
-import DriverIcon from './ui/DriverIcon'; // Import the custom driver icon
+import DriverIconB from './ui/DriverIcon-B';
+import DriverIconW from './ui/DriverIcon-W';
 
 type Props = {};
 
 export default function SideNavbar({}: Props) {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [redred , setRedred ]   = useState()
+  const [isDriverBSelected, setIsDriverBSelected] = useState(true); // State to track the selected driver icon
 
   const onlyWidth = useWindowWidth();
   const mobileWidth = onlyWidth < 768;
@@ -20,7 +21,9 @@ export default function SideNavbar({}: Props) {
     setIsCollapsed(!isCollapsed);
   }
 
-
+  function toggleDriverIcon() {
+    setIsDriverBSelected(!isDriverBSelected);
+  }
 
   return (
     <div className="relative min-w-[80px] border-r px-3 pb-10 pt-20 pr-15">
@@ -44,15 +47,21 @@ export default function SideNavbar({}: Props) {
             variant: 'default',
           },
           {
-            title: 'Users',
-            href: '/users',
+            title: 'Students',
+            href: '/Student',
             icon: UsersRound,
             variant: 'ghost',
           },
           {
             title: 'Drivers',
             href: '/drivers',
-            icon: DriverIcon,
+            icon: Users2Icon,// Render the selected driver icon based on state
+            variant: 'ghost',
+          },
+          {
+            title: 'Reports',
+            href: '/reports',
+            icon: MessageSquareWarning,
             variant: 'ghost',
           },
           {
@@ -61,8 +70,10 @@ export default function SideNavbar({}: Props) {
             icon: Settings,
             variant: 'ghost',
           },
+      
         ]}
       />
+     
     </div>
   );
 }

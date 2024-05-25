@@ -1,14 +1,14 @@
-// routes.ts
+// app/api/User/getStudents/routes.ts
 
 import { NextRequest, NextResponse } from 'next/server';
-import { getUser } from '../../../../Repo/staffLogic';
+import { getStudents } from '../../../../Repo/staffLogic';
 
 export async function GET(req: NextRequest) {
   try {
-    const users = await getUser();
+    const users = await getStudents();
     return NextResponse.json(users);
   } catch (error) {
-    console.error('Error fetching users:', error);
+    console.error('Error fetching students:', error);
     return NextResponse.error();
   }
 }
