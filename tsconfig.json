@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     "src/lib/prisma.js",
     "src/app/api/User/getStudents/route.ts"
-  ],
+, "src/app/server/db.js", "src/components/Reports/usePagination.ts"  ],
   "exclude": ["node_modules"]
 }
