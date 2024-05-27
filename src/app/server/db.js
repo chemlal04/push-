@@ -54,20 +54,35 @@ export async function getReportsFromDb(reporterId, reportedUserId) {
     include: {
       reporter: {
         select: {
+          id_User:true,
           full_name: true,
           email: true,
           image: true,
           status: true,
+          role:true,
         },
       },
       reportedUser: {
         select: {
+          id_User:true,
           full_name: true,
           email: true,
           image: true,
           status: true,
+          role:true,
         },
       },
     },
+  });
+}
+
+
+
+
+
+export async function getBusFromDB(limit, offset) {
+  return prisma.bus.findMany({
+    skip: offset,
+    take: limit,
   });
 }

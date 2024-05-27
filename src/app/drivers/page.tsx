@@ -1,6 +1,4 @@
-// app/drivers/page.tsx
-
-"use client";
+"use client"
 
 import React, { useState, useEffect } from "react";
 import DriverDetails from "../../components/Drivers/DriverDetails";
@@ -16,7 +14,6 @@ interface User {
   default_Adress_lat?: number;
   default_Adress_lng?: number;
   default_time?: string;
-
 }
 
 const DriversPage: React.FC = () => {
@@ -56,7 +53,7 @@ const DriversPage: React.FC = () => {
 
   const handleStatusChange = async (id: string, newStatus: string) => {
     try {
-      const response = await fetch(`/api/User/updateDriverStatus`, { // Update endpoint
+      const response = await fetch(`/api/User/updateDriverStatus`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -81,11 +78,23 @@ const DriversPage: React.FC = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <img
+          src="https://gifdb.com/images/high/funny-loading-vegetable-vm0664kd44rc3jk2.webp"
+          alt="Loading"
+          style={{ width: "200px", height: "200px" }}
+        />
+      </div>
+    );
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div>Error: {error}</div>
+      </div>
+    );
   }
 
   return (
