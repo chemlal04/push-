@@ -30,8 +30,8 @@ const TableComponent = ({ reports, formatDate, formatTime }) => {
             </th>
             <th className="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-300" style={{ width: '100px' }}>Warning</th>
             <th className="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-300" style={{ width: '300px' }}>Comments</th>
-            <th className="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-300" style={{ width: '150px' }}>Reported By</th>
-            <th className="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-300" style={{ width: '150px' }}>Reported On</th>
+            <th className="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-300" style={{ width: '200px' }}>Reported By</th>
+            <th className="px-4 py-3 text-left font-medium text-gray-700 dark:text-gray-300" style={{ width: '200px' }}>Reported On</th>
           </tr>
         </thead>
         <tbody>

@@ -1,4 +1,5 @@
 "use client"
+
 import React, { useState, useEffect } from 'react';
 import UserDetailsModal from '../../components/Students/UserDetailsModal';
 import UserTable from '../../components/Students/UserTable';
@@ -40,11 +41,23 @@ const UsersPage: React.FC = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <img 
+          src="https://gifdb.com/images/high/funny-loading-vegetable-vm0664kd44rc3jk2.webp" 
+          alt="Loading" 
+          style={{ width: '200px', height: '200px' }} 
+        />
+      </div>
+    );
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div>Error: {error}</div>
+      </div>
+    );
   }
 
   return (

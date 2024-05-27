@@ -58,6 +58,7 @@ model Booking {
 
 model Bus {
   id_Bus       Int       @id @default(autoincrement())
+  image        String
   bus_Number   Int
   bus_Name     String
   id_Driver    Int
