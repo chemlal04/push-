@@ -186,7 +186,7 @@ export default function Component() {
               <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">{bus.bus_Name}</h3>
               <div className="flex items-center mb-2">
                 <UserIcon className="w-5 h-5 mr-2 text-gray-500 dark:text-gray-400" />
-                <span className="text-gray-700 dark:text-gray-400">{bus.bus_Capacity} OK</span>
+                <span className="text-gray-700 dark:text-gray-400">{bus.bus_Capacity} Capacity</span>
               </div>
             </div>
           </div>
