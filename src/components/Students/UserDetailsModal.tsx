@@ -1,83 +1,173 @@
-import React from 'react';
-
-interface User {
-  id_User: number;
-  full_name: string;
-  image?: string[];
-  role: string;
-  status?: string;
-  default_Adress_lat?: number;
-  default_Adress_lng?: number;
-  default_time?: string;
-  key?: {
-    id_Key: number;
-    userName: string;
-    email: string;
-  };
-}
+import { CardContent, Card } from "@/components/ui/card";
+import { User } from "@prisma/client";
 
 interface UserDetailsModalProps {
   user: User;
   onClose: () => void;
+  isOpen: boolean; // State to control visibility
 }
 
-const UserDetailsModal: React.FC<UserDetailsModalProps> = ({ user, onClose }) => {
-  const popUpRef = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (popUpRef.current && !popUpRef.current.contains(event.target as Node)) {
-        onClose();
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [onClose]);
+const UserDetailsModal: React.FC<UserDetailsModalProps> = ({ user, onClose, isOpen }) => {
+  if (!isOpen) return null; // Render nothing if modal is closed
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50" ref={popUpRef}>
-      <div className="bg-white p-8 rounded-md shadow-lg flex">
-        <div className="flex-shrink-0 mr-8">
-          {user.image && user.image.length > 0 ? (
-            <img
-              src={user.image[0]}
-              alt={`${user.full_name} Image 1`}
-              className="w-48 h-48 object-cover rounded-md"
-            />
-          ) : (
-            <img
-              src="https://t3.ftcdn.net/jpg/05/87/76/66/360_F_587766653_PkBNyGx7mQh9l1XXPtCAq1lBgOsLl6xH.jpg"
-              alt="Placeholder Image"
-              className="w-48 h-48 object-cover rounded-md"
-            />
-          )}
-        </div>
-        <div>
-          <h2 className="text-xl font-semibold mb-4">{user.full_name}</h2>
-          <div className="border-t border-b border-gray-200 py-4">
-            <p className="text-gray-700 mb-2">ID: {user.id_User}</p>
-            {user.key && (
-              <div className="border-t">
-                <p className="text-gray-700 mb-2">Email: {user.key.email}</p>
-              </div>
-            )}
-            <p className="text-gray-700 mb-2">Role: {user.role}</p>
-            <p className="text-gray-700 mb-2">Status: {user.status || 'N/A'}</p>
-            {user.default_time && <p className="text-gray-700 mb-2">Default Time: {user.default_time}</p>}
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <Card className="relative w-full max-w-md mx-auto">
+        <div className="relative">
+        <img
+            alt="User Avatar"
+            className="aspect-[4/3] w-full object-cover rounded-t-lg"
+            height={360}
+            src={user.image ? user.image : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAgVBMVEUAAAD////7+/v4+Pjm5ub8/Pzg4ODU1NTMzMz09PTi4uIfHx+/v7/Jycnq6urFxcV5eXna2toUFBSurq5bW1syMjI3NzeGhoZcXFyXl5eNjY24uLhtbW2np6crKyubm5tPT09CQkJxcXEcHBxkZGQMDAxKSkpFRUV9fX0mJiah"}
+            width={640}
+          />
+          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 rounded-t-lg">
+            <div className="text-white">
+              <div className="font-semibold text-lg">{user.full_name}</div>
+              <div className="text-sm">{user.email}</div>
+            </div>
           </div>
-          <button
-            className="mt-6 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none"
-            onClick={onClose}
-          >
-            Close
+          <button className="absolute top-4 right-4 rounded-full bg-gray-900/50 text-white hover:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-950 focus:ring-offset-2 dark:bg-gray-50/50 dark:text-gray-900 dark:hover:bg-gray-50 dark:focus:ring-gray-300" onClick={onClose}>
+            <XIcon className="h-4 w-4" />
+            <span className="sr-only">Close</span>
           </button>
         </div>
-      </div>
+        <CardContent className="p-6 grid gap-4">
+          <div className="grid gap-1">
+            <div className="text-gray-500 dark:text-gray-400 text-sm font-medium">Default Address</div>
+            <div>{`${user.default_Adress_lat}, ${user.default_Adress_lng}`}</div>
+          </div>
+          <div className="grid gap-1">
+            <div className="text-gray-500 dark:text-gray-400 text-sm font-medium">Default Time</div>
+            <div>{user.default_time}</div>
+          </div>
+          <div className="grid gap-1">
+            <div className="text-gray-500 dark:text-gray-400 text-sm font-medium">Role</div>
+            <div>{user.role}</div>
+          </div>
+          <div className="grid gap-1">
+            <div className="text-gray-500 dark:text-gray-400 text-sm font-medium">Status</div>
+            <div className="flex items-center gap-2">
+              <div className={`h-2 w-2 rounded-full ${user.status === 'active' ? 'bg-green-500' : 'bg-red-500'}`} />
+              <div>{user.status}</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
 
 export default UserDetailsModal;
+
+function XIcon(props) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </svg>
+  )
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar";
+// import { CardHeader, CardContent, Card } from "@/components/ui/card";
+// import { User } from "@prisma/client";
+
+// interface UserDetailsModalProps {
+//   user: User;
+//   onClose: () => void;
+//   isOpen: boolean; // State to control visibility
+// }
+
+// const UserDetailsModal: React.FC<UserDetailsModalProps> = ({ user, onClose, isOpen }) => {
+//   if (!isOpen) return null; // Render nothing if modal is closed
+
+//   return (
+//     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+//       <Card className="relative w-full max-w-md mx-auto rounded-md"> {/* Added relative class here */}
+//         <div className="absolute top-0 right-0 m-3"> {/* Added absolute positioning here */}
+//           <button className="text-gray-500 hover:text-gray-700" onClick={onClose}>
+//             <svg
+//               className="w-6 h-6"
+//               fill="none"
+//               stroke="currentColor"
+//               viewBox="0 0 24 24"
+//               xmlns="http://www.w3.org/2000/svg"
+//             >
+//               <path
+//                 strokeLinecap="round"
+//                 strokeLinejoin="round"
+//                 strokeWidth="2"
+//                 d="M6 18L18 6M6 6l12 12"
+//               />
+//             </svg>
+//           </button>
+//         </div>
+//         <CardHeader className="bg-gray-100 dark:bg-gray-800 p-6 flex items-center gap-4">
+//           <Avatar className="h-16 w-16">
+//             {user.image ? (
+//               <AvatarImage alt="User Avatar" src={user.image} />
+//             ) : (
+//               <AvatarFallback>{user.full_name.charAt(0)}</AvatarFallback>
+//             )}
+//           </Avatar>
+//           <div className="flex-1 grid gap-1">
+//             <div className="font-semibold text-lg">{user.full_name}</div>
+//             <div className="text-gray-500 dark:text-gray-400 text-sm">{user.email}</div>
+//           </div>
+//         </CardHeader>
+//         <CardContent className="p-6 grid gap-4">
+//           <div className="grid gap-1">
+//             <div className="text-gray-500 dark:text-gray-400 text-sm font-medium">Default Address</div>
+//             <div>{`${user.default_Adress_lat}, ${user.default_Adress_lng}`}</div>
+//           </div>
+//           <div className="grid gap-1">
+//             <div className="text-gray-500 dark:text-gray-400 text-sm font-medium">Default Time</div>
+//             <div>{user.default_time}</div>
+//           </div>
+//           <div className="grid gap-1">
+//             <div className="text-gray-500 dark:text-gray-400 text-sm font-medium">Role</div>
+//             <div>{user.role}</div>
+//           </div>
+//           <div className="grid gap-1">
+//             <div className="text-gray-500 dark:text-gray-400 text-sm font-medium">Status</div>
+//             <div className="flex items-center gap-2">
+//               <div className={`h-2 w-2 rounded-full ${user.status === 'active' ? 'bg-green-500' : 'bg-red-500'}`} />
+//               <div>{user.status}</div>
+//             </div>
+//           </div>
+//         </CardContent>
+//       </Card>
+//     </div>
+//   );
+// };
+
+// export default UserDetailsModal;

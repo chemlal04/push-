@@ -1,41 +1,66 @@
+// app/components/Drivers/DriverTable.tsx
+
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import Badge from '../ui/Badge';
 import usePagination from './usePagination';
-import UserDetailsModal from './UserDetailsModal';
+import DriverDetails from './DriverDetails';
 import { User } from "@prisma/client";
 
-interface UserTableProps {
-  users: User[];
+interface DriverTableProps {
+  drivers: User[];
+  onStatusChange: (id: string, newStatus: string) => void;
 }
 
-const UserTable: React.FC<UserTableProps> = ({ users }) => {
+const DriverTable: React.FC<DriverTableProps> = ({ drivers, onStatusChange }) => {
   const ITEMS_PER_PAGE = 5;
   const [isHovering, setIsHovering] = useState(false);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-  const [sortedUsers, setSortedUsers] = useState(users);
+  const [sortedDrivers, setSortedDrivers] = useState(drivers);
   const [{ currentPage, totalPages }, nextPage, prevPage] = usePagination({
-    totalItems: sortedUsers.length,
+    totalItems: sortedDrivers.length,
     itemsPerPage: ITEMS_PER_PAGE,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedDriver, setSelectedDriver] = useState<User | null>(null);
 
   useEffect(() => {
     handleSortByName();
-  }, []); // Initial sort on component mount
+  }, []);
 
   const handleSortByName = () => {
     const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
     setSortOrder(newSortOrder);
-    const sorted = [...sortedUsers].sort((a, b) => {
+    const sorted = [...sortedDrivers].sort((a, b) => {
       return newSortOrder === 'asc' ? a.full_name.localeCompare(b.full_name) : b.full_name.localeCompare(a.full_name);
     });
-    setSortedUsers(sorted);
+    setSortedDrivers(sorted);
   };
 
+  const toggleStatus = async (id: string, newStatus: string) => {
+    try {
+      const response = await fetch('api/User/getDrivers', { // Corrected URL
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id, status: newStatus }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update status");
+      }
+      const updatedUser = await response.json();
+      setSortedDrivers((drivers) =>
+        drivers.map((driver) => (driver.id_User === id ? updatedUser : driver))
+      );
+    } catch (err) {
+      console.error('Error toggling driver status:', err);
+    }
+  };
+  
+
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const paginatedUsers = sortedUsers.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  const paginatedDrivers = sortedDrivers.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
   return (
     <div className="overflow-x-auto">
@@ -54,14 +79,14 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
           </tr>
         </thead>
         <tbody>
-          {paginatedUsers.map((user) => (
-            <tr key={user.id_User} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800">
+          {paginatedDrivers.map((driver) => (
+            <tr key={driver.id_User} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800">
               <td className="px-4 py-3">
                 <img
-                  alt={user.full_name}
+                  alt={driver.full_name}
                   className="rounded-full"
                   height={40}
-                  src={user.image || "/placeholder.svg"}
+                  src={driver.image || "/placeholder.svg"}
                   style={{
                     aspectRatio: "40/40",
                     objectFit: "cover",
@@ -71,16 +96,16 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
               </td>
               <td className="px-4 py-3">
                 <div className="space-y-1">
-                  <div className="font-medium">{user.full_name}</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">{user.email}</div>
+                  <div className="font-medium">{driver.full_name}</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">{driver.email}</div>
                 </div>
               </td>
-              <td className="px-4 py-3">{user.role}</td>
+              <td className="px-4 py-3">{driver.role}</td>
               <td className="px-4 py-3">
-                {user.status === 'active' ? (
-                  <Badge variant="success">{user.status}</Badge>
+                {driver.status === 'active' ? (
+                  <Badge variant="success">{driver.status}</Badge>
                 ) : (
-                  <Badge variant="danger">{user.status}</Badge>
+                  <Badge variant="danger">{driver.status}</Badge>
                 )}
               </td>
               <td className="px-4 py-3">
@@ -90,12 +115,13 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
                   onMouseEnter={() => setIsHovering(true)}
                   onMouseLeave={() => setIsHovering(false)}
                   onClick={() => {
-                    setSelectedUser(user);
+                    setSelectedDriver(driver);
                     setIsModalOpen(true);
                   }}
                 >
-                  <EyeIconOutline className="w-4 h-4 mr-2" />
-                  <p>View</p>
+                <EyeIconOutline className="w-4 h-4 mr-2" />
+
+                  View
                 </Button>
               </td>
             </tr>
@@ -118,17 +144,20 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
             className={`ml-2 px-4 py-2 ${currentPage === totalPages ? 'bg-gray-500 text-gray-300' : 'bg-black text-white'} rounded`}
             onClick={nextPage}
             disabled={currentPage === totalPages}
-          >
+            >
             Next
           </button>
         </div>
       </div>
-      <UserDetailsModal user={selectedUser} onClose={() => setIsModalOpen(false)} isOpen={isModalOpen} />
+      <DriverDetails
+        driver={selectedDriver}
+        onClose={() => setIsModalOpen(false)}
+        isOpen={isModalOpen}
+        onStatusChange={toggleStatus} // Ensure to pass the onStatusChange function
+      />
     </div>
   );
 };
-
-export default UserTable;
 
 function EyeIconOutline(props: React.SVGProps<SVGSVGElement>) {
   return (
@@ -149,3 +178,6 @@ function EyeIconOutline(props: React.SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+export default DriverTable;
+

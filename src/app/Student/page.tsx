@@ -3,22 +3,7 @@ import React, { useState, useEffect } from 'react';
 import UserDetailsModal from '../../components/Students/UserDetailsModal';
 import UserTable from '../../components/Students/UserTable';
 import PageTitle from '../../components/Students/PageTitle';
-
-interface User {
-  id_User: number;
-  full_name: string;
-  image?: string[];
-  role: string;
-  status?: string;
-  default_Adress_lat?: number;
-  default_Adress_lng?: number;
-  default_time?: string;
-  key?: {
-    id_Key: number;
-    userName: string;
-    email: string;
-  };
-}
+import { User } from '@prisma/client';
 
 const UsersPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -29,9 +14,9 @@ const UsersPage: React.FC = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await fetch('/api/User/getUser');
+        const response = await fetch('/api/User/getStudents');
         if (!response.ok) {
-          throw new Error('Failed to fetch users');
+          throw new Error('Failed to fetch students');
         }
         const data = await response.json();
         setUsers(data);
@@ -64,7 +49,7 @@ const UsersPage: React.FC = () => {
 
   return (
     <div className="container mx-auto py-4">
-      <PageTitle title="Users" />
+      <PageTitle title="Students" />
       <UserTable users={users} onDetailsClick={handleDetailsClick} />
       {selectedUser && (
         <UserDetailsModal user={selectedUser} onClose={handleClose} />
