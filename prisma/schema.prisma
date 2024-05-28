@@ -25,7 +25,10 @@ model User {
   reports            Report[]   @relation("Reporter")
   receivedReports    Report[]   @relation("ReportedUser")
   sessions           Session[]
+  bus                Bus?
+  busId              Int?
   providers          Provider[]
+  issues             Issue[]    @relation("DriverIssues")
 }
 
 model Provider {
@@ -61,11 +64,13 @@ model Bus {
   image        String
   bus_Number   Int
   bus_Name     String
-  id_Driver    Int
+  id_Driver    String    @unique
   bus_Capacity Int
   bus_Status   status
+  user         User      @relation(fields: [id_Driver], references: [id_User])
   booking      Booking[]
   duities      Duty[]
+  issues       Issue[]   @relation("BusIssues")
 }
 
 model TravelTimes {
@@ -96,6 +101,7 @@ enum Role {
 enum BookingStatus {
   Pending
   Completed
+  Checked
   Missed
 }
 
@@ -117,4 +123,19 @@ model Report {
   reporter       User     @relation("Reporter", fields: [reporterId], references: [id_User])
   reportedUser   User     @relation("ReportedUser", fields: [reportedUserId], references: [id_User])
   busId          Int?
+}
+
+model Issue {
+  id_issue    Int       @id @default(autoincrement())
+  driver_id   String
+  issueType   IssueType
+  bus_id      Int
+  reported_at DateTime  @default(now())
+  driver      User      @relation("DriverIssues", fields: [driver_id], references: [id_User])
+  bus         Bus       @relation("BusIssues", fields: [bus_id], references: [id_Bus])
+}
+
+enum IssueType {
+  accident
+  breakdown
 }
