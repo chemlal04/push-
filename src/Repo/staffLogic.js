@@ -1,43 +1,49 @@
-// app/Repo/staffLogic.js
+import { getStudentFromDb, 
+  getDriversFromDb, 
+  updateDriverStatus, 
+  getReportsFromDb,
+  getBusFromDB,
+  getActiveUnassignedDriversFromDb, // Updated import
+  addBusToDb,
+  deleteBusFromDb,
+  editBusInDb,
+} from '../app/server/db';
 
-import {  getStudentFromDb, 
-          getDriversFromDb, 
-          updateDriverStatus, 
-          getReportsFromDb,
-          getBusFromDB,
-          getActiveDriversFromDb,
-          addBusToDb,
-        } from '../app/server/db';
 export async function getStudents() {
-  const res = await getStudentFromDb();
-  return res;
+const res = await getStudentFromDb();
+return res;
 }
 
 export async function getDrivers() {
-  return await getDriversFromDb();
+return await getDriversFromDb();
 }
 
 export async function getActiveDrivers() {
-  return await getActiveDriversFromDb();
+// Use the updated function to get active unassigned drivers
+return await getActiveUnassignedDriversFromDb();
 }
 
 export async function toggleDriverStatus(id, status) {
-  return await updateDriverStatus(id, status);
+return await updateDriverStatus(id, status);
 }
 
 export async function getReports(reporterId, reportedUserId) {
-  const reports = await getReportsFromDb(reporterId, reportedUserId);
-  return reports;
+const reports = await getReportsFromDb(reporterId, reportedUserId);
+return reports;
 }
-
-
 
 export async function getBus(limit, offset) {
-  return await getBusFromDB(limit, offset);
+return await getBusFromDB(limit, offset);
 }
 
-
-
 export async function addBus(busData) {
-  return await addBusToDb(busData);
+return await addBusToDb(busData);
+}
+
+export async function deleteBus(busId) {
+return await deleteBusFromDb(busId);
+}
+
+export async function editBus(busId, updatedBusData) {
+return await editBusInDb(busId, updatedBusData);
 }
