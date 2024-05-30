@@ -5,10 +5,11 @@ import { getStudentFromDb,
   getBusFromDB,
   getActiveUnassignedDriversFromDb, // Updated import
   addBusToDb,
-  deleteBusFromDb,
+  // deleteBusFromDb,
   editBusInDb,
   getIssuesForBusAndDriver,
   getAllIssues,
+  updateIssueStatus,
 } from '../app/server/db';
 
 export async function getStudents() {
@@ -42,9 +43,9 @@ export async function addBus(busData) {
 return await addBusToDb(busData);
 }
 
-export async function deleteBus(busId) {
-return await deleteBusFromDb(busId);
-}
+// export async function deleteBus(busId) {
+// return await deleteBusFromDb(busId);
+// }
 
 export async function editBus(busId, updatedBusData) {
 return await editBusInDb(busId, updatedBusData);
@@ -56,4 +57,8 @@ export async function getIssues() {
 
 export async function getAllIssuesActiveandInactive() {
   return await getAllIssues();
+}
+
+export async function updateIssueStatusById(issueId, newStatus) {
+  return await updateIssueStatus(issueId, newStatus);
 }

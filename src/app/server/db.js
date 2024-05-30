@@ -92,7 +92,6 @@ export async function getReportsFromDb(reporterId, reportedUserId) {
           full_name: true,
           email: true,
           image: true,
-          status: true,
           role:true,
         },
       },
@@ -144,18 +143,18 @@ export async function addBusToDb(busData) {
 
 
 
-export async function deleteBusFromDb(busId) {
-  try {
-    // Delete the bus with the specified ID
-    const deletedBus = await prisma.bus.delete({
-      where: { id_Bus: busId },
-    });
-    return deletedBus;
-  } catch (error) {
-    console.error('Error deleting bus from database:', error);
-    throw new Error("Failed to delete bus");
-  }
-}
+// export async function deleteBusFromDb(busId) {
+//   try {
+//     // Delete the bus with the specified ID
+//     const deletedBus = await prisma.bus.delete({
+//       where: { id_Bus: busId },
+//     });
+//     return deletedBus;
+//   } catch (error) {
+//     console.error('Error deleting bus from database:', error);
+//     throw new Error("Failed to delete bus");
+//   }
+// }
 
 
 export async function editBusInDb(busId, updatedBusData) {
@@ -208,20 +207,28 @@ export async function getIssuesForBusAndDriver() {
   }
 }
 
+
+
 export async function getAllIssues() {
   try {
     const issues = await prisma.issue.findMany({
       include: {
         driver: {
           select: {
+            id_User: true,
             full_name: true,
             image: true,
+            email: true,
+            status: true,
+            role: true,
           },
         },
         bus: {
           select: {
+            id_Bus: true,
             bus_Name: true,
             image: true,
+            bus_Status: true,
           },
         },
       },
@@ -231,5 +238,20 @@ export async function getAllIssues() {
   } catch (error) {
     console.error('Error fetching issues for bus and driver:', error);
     throw new Error("Failed to fetch issues for bus and driver");
+  }
+}
+
+
+
+export async function updateIssueStatus(issueId, newStatus) {
+  try {
+    const updatedIssue = await prisma.issue.update({
+      where: { id_issue: issueId },
+      data: { status: newStatus },
+    });
+    return updatedIssue;
+  } catch (error) {
+    console.error('Error updating issue status:', error);
+    throw new Error("Failed to update issue status");
   }
 }

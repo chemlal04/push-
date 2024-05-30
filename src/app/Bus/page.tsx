@@ -338,7 +338,6 @@ export default function Component() {
       if (response.ok) {
         // If the request is successful, update the displayed bus data without refreshing
         const updatedBusData = await response.json();
-        console.log('Bus updated successfully:', updatedBusData);
   
         // Update the displayed bus without refreshing the page
         setBuses(prevBuses =>
@@ -387,35 +386,35 @@ export default function Component() {
 
 
 
-  const handleDeleteBus = async (bus) => {
-    try {
-      const response = await fetch('/api/Bus/deleteBus', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: bus.id_Bus }),
-      });
+  // const handleDeleteBus = async (bus) => {
+  //   try {
+  //     const response = await fetch('/api/Bus/deleteBus', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({ id: bus.id_Bus }),
+  //     });
 
-      if (response.ok) {
-        setBuses(buses.filter((b) => b.id_Bus !== bus.id_Bus));
-        toast.success('Bus deleted successfully', {
-          position: 'bottom-right',
-        });
-      } else {
-        const errorData = await response.json();
-        toast.error(`Failed to delete bus: ${errorData.error}`, {
-          position: 'bottom-right',
-        });
-      }
-    } catch (error) {
-      console.error('Error deleting bus:', error);
-      toast.error('Failed to delete bus', {
-        position: 'bottom-right',
-      });
-    }
-    setIsDeletePopupOpen(false);
-  };
+  //     if (response.ok) {
+  //       setBuses(buses.filter((b) => b.id_Bus !== bus.id_Bus));
+  //       toast.success('Bus deleted successfully', {
+  //         position: 'bottom-right',
+  //       });
+  //     } else {
+  //       const errorData = await response.json();
+  //       toast.error(`Failed to delete bus: ${errorData.error}`, {
+  //         position: 'bottom-right',
+  //       });
+  //     }
+  //   } catch (error) {
+  //     console.error('Error deleting bus:', error);
+  //     toast.error('Failed to delete bus', {
+  //       position: 'bottom-right',
+  //     });
+  //   }
+  //   setIsDeletePopupOpen(false);
+  // };
 
   
 
@@ -559,16 +558,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         >
           <PencilIcon className="w-5 h-5" /> {/* Edit icon */}
         </button>
-        <button
-          className="rounded-md text-red-500 hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 dark:text-red-400 dark:hover:text-red-400 dark:focus:ring-red-300"
-          onClick={(e) => {
-            e.stopPropagation();
-            setBusToDelete(bus);
-            setIsDeletePopupOpen(true);
-          }}
-        >
-          <TrashIcon className="w-5 h-5" /> {/* Delete icon */}
-        </button>
+        
       </div>
 
 
@@ -756,7 +746,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 
 
 
-{isDeletePopupOpen && busToDelete && (
+{/* {isDeletePopupOpen && busToDelete && (
   <div className="fixed inset-0 flex justify-center items-center bg-gray-900 bg-opacity-50">
     <div className="bg-white dark:bg-gray-800 rounded-lg p-6 max-w-md">
       <h2 className="text-xl font-bold mb-4">Delete Bus</h2>
@@ -781,7 +771,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       </div>
     </div>
   </div>
-)}
+)} */}
 
 <ToastContainer />
 
@@ -902,7 +892,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               </button>
               <button
                 type="submit"
-                className="px-2 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 flex items-center text-xs" // Adjusted padding and font size
+                className="px-2 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 flex items-center text-xs" // Adjusted padding and font size
               >
                 <CheckIcon className="w-4 h-4 mr-1" /> Save
               </button>
