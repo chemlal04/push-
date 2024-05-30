@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Bus" ALTER COLUMN "id_Driver" SET DATA TYPE TEXT;

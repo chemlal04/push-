@@ -8,7 +8,6 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const limit = parseInt(searchParams.get('limit') || '4');
     const offset = parseInt(searchParams.get('offset') || '0');
-    
     const buses = await getBus(limit, offset);
     return NextResponse.json(buses);
   } catch (error) {

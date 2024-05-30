@@ -1,3 +1,5 @@
+// /Students/UserTable
+
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import Badge from '../ui/Badge';
@@ -24,6 +26,7 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
   useEffect(() => {
     handleSortByName();
   }, []); // Initial sort on component mount
+  
 
   const handleSortByName = () => {
     const newSortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
@@ -32,6 +35,15 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
       return newSortOrder === 'asc' ? a.full_name.localeCompare(b.full_name) : b.full_name.localeCompare(a.full_name);
     });
     setSortedUsers(sorted);
+  };
+
+
+  const handleNextPage = () => {
+    nextPage();
+  };
+  
+  const handlePrevPage = () => {
+    prevPage();
   };
 
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -109,14 +121,14 @@ const UserTable: React.FC<UserTableProps> = ({ users }) => {
         <div>
           <button
             className={`mr-2 px-4 py-2 ${currentPage === 1 ? 'bg-gray-500 text-gray-300' : 'bg-black text-white'} rounded`}
-            onClick={prevPage}
+            onClick={handlePrevPage}
             disabled={currentPage === 1}
           >
             Previous
           </button>
           <button
             className={`ml-2 px-4 py-2 ${currentPage === totalPages ? 'bg-gray-500 text-gray-300' : 'bg-black text-white'} rounded`}
-            onClick={nextPage}
+            onClick={handleNextPage}
             disabled={currentPage === totalPages}
           >
             Next
