@@ -157,6 +157,7 @@ export async function deleteBusFromDb(busId) {
   }
 }
 
+
 export async function editBusInDb(busId, updatedBusData) {
   try {
     // Update the bus with the specified ID
@@ -178,3 +179,57 @@ export async function editBusInDb(busId, updatedBusData) {
   }
 }
 
+
+
+export async function getIssuesForBusAndDriver() {
+  try {
+    const issues = await prisma.issue.findMany({
+      where: {
+        status: 'inactive',
+      },
+      include: {
+        driver: {
+          select: {
+            full_name: true,
+          },
+        },
+        bus: {
+          select: {
+            bus_Name: true,
+          },
+        },
+      },
+    });
+
+    return issues;
+  } catch (error) {
+    console.error('Error fetching issues for bus and driver:', error);
+    throw new Error("Failed to fetch issues for bus and driver");
+  }
+}
+
+export async function getAllIssues() {
+  try {
+    const issues = await prisma.issue.findMany({
+      include: {
+        driver: {
+          select: {
+            full_name: true,
+            image: true,
+          },
+        },
+        bus: {
+          select: {
+            bus_Name: true,
+            image: true,
+          },
+        },
+      },
+    });
+
+    return issues;
+  } catch (error) {
+    console.error('Error fetching issues for bus and driver:', error);
+    throw new Error("Failed to fetch issues for bus and driver");
+  }
+}

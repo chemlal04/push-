@@ -267,7 +267,7 @@ export default function Component() {
 
   const getDriverName = (driverId) => {
     const driver = drivers.find(driver => driver.id_User === driverId);
-    return driver ? driver.full_name : 'Unknown';
+    return driver ? driver.full_name : driverId;
   };
 
 
@@ -339,9 +339,6 @@ export default function Component() {
         // If the request is successful, update the displayed bus data without refreshing
         const updatedBusData = await response.json();
         console.log('Bus updated successfully:', updatedBusData);
-        toast.success('Bus updated successfully', {
-          position: 'bottom-right',
-        });
   
         // Update the displayed bus without refreshing the page
         setBuses(prevBuses =>
@@ -353,8 +350,16 @@ export default function Component() {
         // Refetch the buses to ensure the data is up to date
         await fetchBuses(offset);
   
-        setIsEditPopupOpen(false); // Close the edit popup after successful update
-      } else {
+        // Close the edit popup after successful update
+        setIsEditPopupOpen(false);
+  
+        // Display success toast message after refreshing and closing the popup
+      toast.success('Bus updated successfully', {
+        position: 'bottom-right',
+      });
+      } 
+      
+      else {
         // If there's an error in the request, handle it here
         console.error('Failed to update bus:', response.statusText);
         // Optionally, you can display an error message to the user or handle the error in another way
@@ -371,6 +376,7 @@ export default function Component() {
       });
     }
   }
+
   
   
   
@@ -413,7 +419,7 @@ export default function Component() {
 
   
 
-  // Function to handle form submission
+// Function to handle form submission
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   try {
@@ -448,8 +454,18 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       bus_Status: '',
     });
     setSelectedDriverId(null);
+
+    // Show success toast message
+    toast.success('Bus added successfully', {
+      position: 'bottom-right',
+    });
   } catch (error) {
     setError(error.message);
+
+    // Show error toast message
+    toast.error('Failed to add bus', {
+      position: 'bottom-right',
+    });
   }
 };
 
@@ -712,7 +728,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                 <UserIcon className="w-5 h-5" />
                 <span>Driver:</span>
               </div>
-              <div>{selectedBus ? selectedBus.id_Driver : '-'}</div>
+              <div>{selectedBus ? getDriverName(selectedBus.id_Driver) : '-'}</div>
 
               <div className="flex items-center gap-2">
                 <UsersIcon className="w-5 h-5" />
@@ -840,7 +856,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
                 value={editedBus.id_Driver}
                 onChange={(e) => setEditedBus({ ...editedBus, id_Driver: e.target.value })}
               >
-                <option value="">Select a driver</option>
+                <option value="">{editedBus.id_Driver}</option>
                 {drivers.map((driver) => (
                   <option key={driver.id_User} value={driver.id_User}>{driver.full_name}</option>
                 ))}

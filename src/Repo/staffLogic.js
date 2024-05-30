@@ -7,6 +7,8 @@ import { getStudentFromDb,
   addBusToDb,
   deleteBusFromDb,
   editBusInDb,
+  getIssuesForBusAndDriver,
+  getAllIssues,
 } from '../app/server/db';
 
 export async function getStudents() {
@@ -46,4 +48,12 @@ return await deleteBusFromDb(busId);
 
 export async function editBus(busId, updatedBusData) {
 return await editBusInDb(busId, updatedBusData);
+}
+
+export async function getIssues() {
+    return await getIssuesForBusAndDriver();
+}
+
+export async function getAllIssuesActiveandInactive() {
+  return await getAllIssues();
 }
