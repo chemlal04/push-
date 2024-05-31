@@ -77,7 +77,7 @@ export default function Navbare() {
                 <CardContent className="p-6">
                   {loading && <p>Loading...</p>}
                   {error && <p>{error}</p>}
-                  {issues.length > 0 &&
+                  {issues.length > 0 ? (
                     issues.map(issue => (
                       <div key={issue.id_issue} className="mb-4">
                         <div className="flex items-center mb-2 cursor-pointer" onClick={() => handleIssueClick(issue)}>
@@ -103,7 +103,10 @@ export default function Navbare() {
                           </div>
                         )}
                       </div>
-                    ))}
+                    ))
+                  ) : (
+                    <p className="text-gray-500">There are no issues at the moment.</p>
+                  )}
                 </CardContent>
               </Card>
             </PopoverContent>
