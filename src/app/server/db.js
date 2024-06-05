@@ -120,10 +120,23 @@ export async function getBusFromDB(limit, offset) {
   });
 }
 
+export async function getHighestBusId() {
+  const highestBus = await prisma.bus.findFirst({
+    orderBy: {
+      id_Driver: 'desc',
+    },
+    select: {
+      id_Driver: true,
+    },
+  });
+  return highestBus ? highestBus.id : 0; // Return 0 if no buses found
+}
+
 
 
 export async function addBusToDb(busData) {
   try {
+    // Step 1: Create the new bus entry
     const newBus = await prisma.bus.create({
       data: {
         image: busData.image,
@@ -134,12 +147,24 @@ export async function addBusToDb(busData) {
         bus_Status: busData.bus_Status,
       },
     });
+
+    // Step 2: Update the User model with the bus id
+    await prisma.user.update({
+      where: {
+        id_User: busData.id_Driver,
+      },
+      data: {
+        busId: newBus.id_Bus,
+      },
+    });
+
     return newBus;
   } catch (error) {
     console.error('Error adding bus to database:', error); // Log the error
     return null;
   }
 }
+
 
 
 
@@ -254,4 +279,9 @@ export async function updateIssueStatus(issueId, newStatus) {
     console.error('Error updating issue status:', error);
     throw new Error("Failed to update issue status");
   }
+}
+
+
+export async function getBookingFromDb() {
+  return prisma.booking.findMany();
 }

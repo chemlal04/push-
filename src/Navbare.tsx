@@ -84,11 +84,21 @@ export default function Navbare() {
                           <div className="mr-2">
                             <TriangleAlertIcon />
                           </div>
-                          <div>
+                          <div className="flex-grow">
                             <p className="text-red-500 font-bold">{issue.issueType}</p>
                             <p className="text-sm text-gray-500">{formatTime(issue.reported_at)}</p>
                           </div>
+                          <button 
+                            className="ml-auto p-0.5 flex items-center text-xs text-gray-500" 
+                            onClick={(e) => {
+                              e.stopPropagation(); // Prevent triggering the parent div's click event
+                              window.location.href = '/Issues'; // Navigate to the /Issues page
+                            }}
+                          >
+                            <EyeIconOutline className="w-4 h-4 mr-1" /> View
+                          </button>
                         </div>
+
                         {expandedIssue === issue && (
                           <div>
                             <div className="flex justify-between mb-2">
@@ -172,4 +182,24 @@ function TriangleAlertIcon(props) {
       <path d="M12 17h.01" />
     </svg>
   )
+}
+
+function EyeIconOutline(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  );
 }

@@ -9,6 +9,19 @@ interface DriverDetailsProps {
   onStatusChange: (id: string, newStatus: string) => void;
 }
 
+const DrivingHours = ({ drivingHours }) => {
+  const [hours, setHours] = useState(0);
+
+  useEffect(() => {
+    // Assuming drivingHours is a string or another type that can be converted to an integer
+    if (drivingHours) {
+      setHours(parseInt(drivingHours, 10)); // Convert to integer and update state
+    }
+  }, [drivingHours]);
+
+  return <div>{hours} hours</div>;
+};
+
 const DriverDetails: React.FC<DriverDetailsProps> = ({
   driver: initialDriver,
   onClose,
@@ -78,6 +91,21 @@ const DriverDetails: React.FC<DriverDetailsProps> = ({
             </div>
             <div>{driver.role}</div>
           </div>
+
+          <div className="grid gap-1">
+            <div className="text-gray-500 dark:text-gray-400 text-sm font-medium">
+              Salary
+            </div>
+            <div>{((driver.salary_per_hour)*(driver.driving_hours))} DH/mois</div>
+          </div>
+
+          <div className="grid gap-1">
+            <div className="text-gray-500 dark:text-gray-400 text-sm font-medium">
+              Total driving hours
+            </div>
+            <DrivingHours drivingHours={driver.driving_hours} />
+          </div>
+
           <div className="grid gap-1">
             <div className="text-gray-500 dark:text-gray-400 text-sm font-medium">
               Status

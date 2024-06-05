@@ -10,6 +10,8 @@ import { getStudentFromDb,
   getIssuesForBusAndDriver,
   getAllIssues,
   updateIssueStatus,
+  getHighestBusId,
+  getBookingFromDb,
 } from '../app/server/db';
 
 export async function getStudents() {
@@ -62,3 +64,11 @@ export async function getAllIssuesActiveandInactive() {
 export async function updateIssueStatusById(issueId, newStatus) {
   return await updateIssueStatus(issueId, newStatus);
 }
+
+export async function HighestBusId() {
+  return await getHighestBusId();
+}
+
+export async function getBooking() {
+  return await getBookingFromDb();
+  }

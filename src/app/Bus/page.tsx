@@ -228,15 +228,16 @@ export default function Component() {
   const [error, setError] = useState<string | null>(null);
   const [offset, setOffset] = useState(0);
   const limit = 4;
-  const [hasMoreBuses, setHasMoreBuses] = useState(true); // Track if there are more buses to fetch
-  const [drivers, setDrivers] = useState<Driver[]>([]); // State variable to hold available drivers
-  const [selectedDriverId, setSelectedDriverId] = useState<number | null>(null); // State variable to hold the selected driver ID
-  const [selectedBus, setSelectedBus] = useState<Bus | null>(null); // State variable to hold the selected bus
-  const [isPopupOpen, setIsPopupOpen] = useState(false); // State variable to manage the pop-up visibility
+  const [hasMoreBuses, setHasMoreBuses] = useState(true);
+  const [drivers, setDrivers] = useState<Driver[]>([]); 
+  const [selectedDriverId, setSelectedDriverId] = useState<number | null>(null); 
+  const [selectedBus, setSelectedBus] = useState<Bus | null>(null);
+  const [isPopupOpen, setIsPopupOpen] = useState(false); 
   const [selectedStatus, setSelectedStatus] = useState('');
-  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
-  const [busToDelete, setBusToDelete] = useState(null);
+  // const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+  // const [busToDelete, setBusToDelete] = useState(null);
   const [isEditPopupOpen, setIsEditPopupOpen] = useState(false);
+  const [highestBusId, setHighestBusId] = useState(0);
   const [busToEdit, setBusToEdit] = useState(null);
   const [editedBus, setEditedBus] = useState({
     id_Bus: '',
@@ -419,11 +420,15 @@ export default function Component() {
   
 
 // Function to handle form submission
+// Function to handle form submission
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   try {
+    // Increment the highest bus ID by 1 for the new bus
+    const newBusId = highestBusId + 1;
     const formDataToSend = {
       ...formData,
+      id: newBusId,
       id_Driver: selectedDriverId ? String(selectedDriverId) : null
     };
     const response = await fetch('/api/Bus/addBus', {
@@ -469,27 +474,29 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 };
 
 
+
   
 
 
-  // Function to fetch buses
-  const fetchBuses = async (offset: number) => {
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/Bus/getBus?limit=${limit}&offset=${offset}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch buses');
-      }
-      const data = await response.json();
-      setBuses(data);
-      // Check if there are more buses to fetch
-      setHasMoreBuses(data.length === limit);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
+const fetchBuses = async (offset: number) => {
+  setLoading(true);
+  try {
+    const response = await fetch(`/api/Bus/getBus?limit=${limit}&offset=${offset}`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch buses');
     }
-  };
+    const data = await response.json();
+    setBuses(data.buses);
+    // Store the highest bus ID
+    setHighestBusId(data.highestBusId);
+    // Check if there are more buses to fetch
+    setHasMoreBuses(data.buses.length === limit);
+  } catch (error) {
+    setError(error.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     fetchBuses(offset);
