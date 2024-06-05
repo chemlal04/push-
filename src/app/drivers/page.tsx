@@ -14,6 +14,8 @@ interface User {
   default_Adress_lat?: number;
   default_Adress_lng?: number;
   default_time?: string;
+  salary_per_hour: Float32Array;
+  driving_hours: string;
 }
 
 const DriversPage: React.FC = () => {
