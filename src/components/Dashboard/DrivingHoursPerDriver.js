@@ -32,6 +32,7 @@ export default function DrivingHoursPerDriver() {
   const driverHoursWithPercentage = driverData.map(driver => ({
     id: driver.full_name,
     label: driver.full_name,
+    image: driver.image,
     value: parseFloat(driver.driving_hours || 0),
     percentage: totalDrivingHours !== 0 ? ((parseFloat(driver.driving_hours || 0) / totalDrivingHours) * 100).toFixed(2) : 0,
   }));
@@ -69,7 +70,7 @@ function PieChart({ data, ...props }) {
         tooltip={({ datum }) => (
           <div style={{ background: "white", padding: "10px", borderRadius: "5px", fontSize: "12px", display: "flex", alignItems: "center" }}>
             <img
-              src={datum.data.image || "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAMAAABC4vDmAAAAbFBMVEUAAADmzEu6VyF+AAAAAElFTkSuQmCC"} // Render default user PNG if image is not available
+              src={data.image || "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAMAAABC4vDmAAAAbFBMVEUAAADmzEu6VyF+AAAAAElFTkSuQmCC"} // Render default user PNG if image is not available
               alt={datum.label}
               style={{ width: "50px", height: "50px", borderRadius: "50%", marginRight: "10px" }}
               onError={(e) => { e.currentTarget.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAMAAABC4vDmAAAAbFBMVEUAAAD////u7u7t7e32AAAAElFTkSuQmCC";
