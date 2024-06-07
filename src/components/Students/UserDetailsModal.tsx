@@ -3,6 +3,10 @@ import { CardContent, Card } from "@/components/ui/card";
 import { User } from "@prisma/client";
 import { ToastContainer, toast } from 'react-toastify'; // Import ToastContainer and toast
 import 'react-toastify/dist/ReactToastify.css'; // Import the react-toastify CSS
+import { Dialog,DialogTrigger } from '@radix-ui/react-dialog';
+import GoogleMapsComponentModal from "../StudentMap/studentMap"
+import { Button } from "../ui/button";
+
 
 interface UserDetailsModalProps {
   user: User;
@@ -13,6 +17,8 @@ interface UserDetailsModalProps {
 const UserDetailsModal: React.FC<UserDetailsModalProps> = ({ user: initialUser, onClose, isOpen, onUpdateStatus }) => {
   const [user, setUser] = useState<User | null>(initialUser); // Use a default value of null
   const [status, setStatus] = useState(initialUser?.status || 'inactive'); // Default status to 'inactive'
+  const [modalIsOpen, setModalIsOpen] = useState(false); // State to control the Modal visibility
+
 
   useEffect(() => {
     // Update state when initialUser changes
@@ -21,6 +27,15 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({ user: initialUser, 
       setStatus(initialUser.status);
     }
   }, [initialUser]);
+
+  const openModal = (e: React.MouseEvent) => {
+    e.preventDefault(); // Prevent default action
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  }; 
 
   if (!isOpen || !user) return null; // Render nothing if modal is closed or user is null
 
@@ -83,10 +98,29 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({ user: initialUser, 
             </button>
           </div>
           <CardContent className="p-6 grid gap-4">
-            <div className="grid gap-1">
-              <div className="text-gray-500 dark:text-gray-400 text-sm font-medium">Default Address</div>
-              <div>{`${user.default_Adress_lat}, ${user.default_Adress_lng}`}</div>
+          <div className="grid gap-1">
+            <div className="text-gray-500 dark:text-gray-400 text-sm font-medium">Default Address</div>
+            <div>
+              {`${user.default_Adress_lat}, ${user.default_Adress_lng}`} 
+               
+              <div>
+              <Dialog>
+             <DialogTrigger asChild>
+                      <Button
+                size="sm"
+                variant="outline"
+              >
+                <EyeIconOutline className="w-4 h-4 mr-2" />
+                <p>View</p>
+              </Button> 
+               </DialogTrigger>
+
+
+                      <GoogleMapsComponentModal coordinates={{lat:user.default_Adress_lat,lng:user.default_Adress_lng}} />
+                    </Dialog>
+              </div>
             </div>
+          </div>
             <div className="grid gap-1">
               <div className="text-gray-500 dark:text-gray-400 text-sm font-medium">Default Time</div>
               <div>{user.default_time}</div>
@@ -137,4 +171,33 @@ function XIcon(props) {
       <path d="m6 6 12 12" />
     </svg>
   );
+}
+
+
+function EyeIconOutline(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  );
+}
+
+function setIsHovering(arg0: boolean): void {
+  throw new Error('Function not implemented.');
+}
+
+function setSelectedUser(user: { id_User: string; full_name: string; image: string | null; email: string; role: import(".prisma/client").$Enums.Role; status: import(".prisma/client").$Enums.status | null; default_Adress_lat: number | null; default_Adress_lng: number | null; createdAt: Date; default_time: string | null; busId: number | null; }) {
+  throw new Error('Function not implemented.');
 }
