@@ -285,3 +285,16 @@ export async function updateIssueStatus(issueId, newStatus) {
 export async function getBookingFromDb() {
   return prisma.booking.findMany();
 }
+
+export async function updateStudentStatus(id, newStatus) {
+  try {
+    const updatedStudent = await prisma.user.update({
+      where: { id_User: id },
+      data: { status: newStatus },
+    });
+    return updatedStudent;
+  } catch (error) {
+    console.error('Error updating student status:', error);
+    throw new Error("Failed to update student status");
+  }
+}
