@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { CardContent, Card } from "@/components/ui/card";
 import { User } from "@prisma/client";
 
+
 interface DriverDetailsProps {
   driver: User | null; // Allow driver to be null initially
   onClose: () => void;

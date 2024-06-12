@@ -298,3 +298,57 @@ export async function updateStudentStatus(id, newStatus) {
     throw new Error("Failed to update student status");
   }
 }
+
+
+export async function getUsersForSameDepartureTimeAndDate() {
+  try {
+      const bookings = await prisma.booking.findMany({
+          include: {
+              user: {
+                  select: {
+                      full_name: true,
+                      image: true,
+                      email: true
+                  }
+              },
+              bus: {
+                  select: {
+                      bus_Number: true,
+                      bus_Name: true
+                  }
+              }
+          }
+      });
+
+      // Grouping bookings by date and time
+      const groupedBookings = {};
+      for (const booking of bookings) {
+          const key = `${booking.depart_Date}_${booking.depart_Time}`;
+          if (!groupedBookings[key]) {
+              groupedBookings[key] = [];
+          }
+          groupedBookings[key].push({
+              id: booking.id_Booking,
+              userId: booking.user_id,
+              departTime: booking.depart_Time,
+              departDate: booking.depart_Date,
+              addressLat: booking.Adress_lnt,
+              addressLng: booking.Adress_lng,
+              bookedAt: booking.bookedAt,
+              busId: booking.bus_id,
+              user: booking.user,
+              bus: booking.bus
+          });
+      }
+
+      // Mapping grouped bookings into 'Travel' objects
+      const travels = Object.values(groupedBookings).map(bookings => ({
+          travel: bookings
+      }));
+
+      return travels;
+  } catch (error) {
+      console.error("Error fetching bookings:", error);
+      throw error;
+  }
+}

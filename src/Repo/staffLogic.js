@@ -13,6 +13,7 @@ import { getStudentFromDb,
   getHighestBusId,
   getBookingFromDb,
   updateStudentStatus,
+  getUsersForSameDepartureTimeAndDate,
 } from '../app/server/db';
 
 export async function getStudents() {
@@ -76,4 +77,8 @@ export async function getBooking() {
 
 export async function updateStudent(id,status) {
   return await updateStudentStatus(id,status);
+}
+
+export async function getTravel(){
+  return await getUsersForSameDepartureTimeAndDate();
 }

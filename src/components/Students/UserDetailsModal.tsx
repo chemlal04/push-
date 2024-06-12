@@ -6,6 +6,8 @@ import 'react-toastify/dist/ReactToastify.css'; // Import the react-toastify CSS
 import { Dialog,DialogTrigger } from '@radix-ui/react-dialog';
 import GoogleMapsComponentModal from "../StudentMap/studentMap"
 import { Button } from "../ui/button";
+import { MapPinned } from 'lucide-react';
+
 
 
 interface UserDetailsModalProps {
@@ -110,7 +112,7 @@ const UserDetailsModal: React.FC<UserDetailsModalProps> = ({ user: initialUser, 
                 size="sm"
                 variant="outline"
               >
-                <EyeIconOutline className="w-4 h-4 mr-2" />
+                <MapPinned className="w-4 h-4 mr-2"/>
                 <p>View</p>
               </Button> 
                </DialogTrigger>
@@ -174,25 +176,6 @@ function XIcon(props) {
 }
 
 
-function EyeIconOutline(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-      <circle cx="12" cy="12" r="3" />
-    </svg>
-  );
-}
 
 function setIsHovering(arg0: boolean): void {
   throw new Error('Function not implemented.');
