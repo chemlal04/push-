@@ -44,7 +44,7 @@ const UsersPage: React.FC = () => {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <img 
-          src="https://gifdb.com/images/high/funny-loading-vegetable-vm0664kd44rc3jk2.webp" 
+          src="@/../public/loader" 
           alt="Loading" 
           style={{ width: '200px', height: '200px' }} 
         />

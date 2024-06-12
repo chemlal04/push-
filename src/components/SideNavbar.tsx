@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import { Nav } from './ui/nav';
 import { useWindowWidth } from '@react-hook/window-size';
-import { LayoutDashboard, UsersRound, Settings, MessageSquareWarning, Users2Icon, BusFrontIcon, AlertCircleIcon, AlertTriangle } from 'lucide-react';
+import { LayoutDashboard, UsersRound, Settings, MessageSquareWarning, Users2Icon, BusFrontIcon, AlertCircleIcon, AlertTriangle, Rotate3D, Route } from 'lucide-react';
+import { Road_Rage } from 'next/font/google';
 
 
 type Props = {};
@@ -75,9 +76,9 @@ export default function SideNavbar({}: Props) {
             variant: 'ghost',
           },
           {
-            title: 'Settings',
-            href: '/settings',
-            icon: Settings,
+            title: 'Travels',
+            href: '/Travels',
+            icon: Route,
             variant: 'ghost',
           },
       
